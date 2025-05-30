@@ -1,0 +1,68 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 0,
+    "patch": 2
+  },
+  "configurePresets": [
+    {
+      "name": "mcu-build",
+      "displayName": "AVR32 MCU Debug Build",
+      "description": "Debug build for AVR32 AT32UC3L0256 MCU",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/mcu_build",
+      "cacheVariables": {
+        "TARGET_MCU": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_SYSTEM_NAME": "Generic",
+        "AVR32_OBJCOPY": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-objcopy.exe",
+        "AVR32_OBJDUMP": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-objdump.exe",
+        "AVR32_SIZE":    "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-size.exe",
+        "CMAKE_C_COMPILER": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-gcc.exe",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -Wall -ffunction-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DDEBUG",
+        "CMAKE_EXE_LINKER_FLAGS": "-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable -Wl,--direct-data -mpart=uc3l0256",
+        "CMAKE_VERBOSE_MAKEFILE": "ON"
+      }
+    },
+    {
+      "name": "windows-build",
+      "displayName": "Windows Test Debug Build",
+      "description": "Debug unit testing build for Windows",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/windows_build",
+      "cacheVariables": {
+        "TARGET_WINDOWS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
+        "CMAKE_C_FLAGS": "--coverage",
+        "CMAKE_CXX_FLAGS": "--coverage"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "mcu-build",
+      "configurePreset": "mcu-build",
+      "description": "Build to target AVR32 MCU",
+      "jobs": 16
+    },
+    {
+      "name": "windows-build",
+      "configurePreset": "windows-build",
+      "description": "Build to target Windows for unit testing",
+      "jobs": 8
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-build",
+      "configurePreset": "windows-build",
+      "description": "Run unit tests on Windows with MSYS2 GCC",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
