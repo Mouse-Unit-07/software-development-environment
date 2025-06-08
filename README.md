@@ -21,7 +21,7 @@
     - Build and develop in this new `software-development-environment` directory w/ MSYS2 and command prompt
   - Refer to `software-hello-world` and `software-repeat-hello-world` for examples of source code repositories that are compatible w/ this development environment
 
-# What To Modify
+## What To Modify
 - Files that must be changed according to the software project you clone into src/ folder:
     - software-development-environment/**avr32/CMakeLists.txt**
       - all of your interface subdirectories under src/ must be listed out w/ `target_include_directories()`
@@ -105,7 +105,7 @@
     - gcc, g++, gcov, cmake, ninja
       - `C:\msys64\mingw64\bin`
 
-# Build Instructions
+## Build Instructions
   - AVR32 MCU build
     - navigate to top level project directory w/ MSYS2 MINGW64 terminal
     - `cmake --preset mcu-build`
