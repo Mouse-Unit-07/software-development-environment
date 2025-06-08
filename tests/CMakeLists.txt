@@ -5,7 +5,7 @@
 #                                                                              #
 #------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 4.0.2)
-project(hello_world_tests LANGUAGES C CXX)
+project(test_build_target LANGUAGES C CXX)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -15,7 +15,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CppUTest)
 
-# === Static Analysis: Cppcheck ===
+# Static Analysis: Cppcheck
 function(create_cppcheck_build_target)
     message(STATUS "ALL_TEST_SOURCES: ${ALL_TEST_SOURCES}")
 
@@ -29,7 +29,10 @@ function(create_cppcheck_build_target)
             --inline-suppr
             --suppress=missingIncludeSystem
             -I ${CMAKE_SOURCE_DIR}/src
+
+            # \/ === ADD SOURCE SUBDIRECTORIES HERE === \/
             -I ${CMAKE_SOURCE_DIR}/src/hello_world
+            
             ${CMAKE_SOURCE_DIR}/src/main.c
             ${ALL_TEST_SOURCES}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -38,7 +41,7 @@ function(create_cppcheck_build_target)
     )
 endfunction()
 
-# === Formatting: clang-format ===
+# Formatting: clang-format
 function(create_clang_format_build_target)
     message(STATUS "ALL_TEST_SOURCES: ${ALL_TEST_SOURCES}")
 
@@ -63,6 +66,6 @@ function(create_clang_format_build_target)
     add_custom_target(format_sources DEPENDS ${FORMATTED_SOURCES})
 endfunction()
 
-# === run functions
+# run functions
 create_cppcheck_build_target()
 create_clang_format_build_target()
