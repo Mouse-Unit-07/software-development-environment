@@ -5,7 +5,7 @@
 #                                                                              #
 #------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 4.0.2)
-project(test_build_target LANGUAGES C CXX)
+project(windows_build LANGUAGES C CXX)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -30,8 +30,9 @@ function(create_cppcheck_build_target)
             --suppress=missingIncludeSystem
             -I ${CMAKE_SOURCE_DIR}/src
 
-            # \/ === ADD SOURCE SUBDIRECTORIES HERE === \/
-            -I ${CMAKE_SOURCE_DIR}/src/hello_world
+            # === Start: Add each of your source interface directories ===
+            -I ${CMAKE_SOURCE_DIR}/src/hello_world # Example for Hello World project
+            # === End ===
             
             ${CMAKE_SOURCE_DIR}/src/main.c
             ${ALL_TEST_SOURCES}
@@ -66,6 +67,6 @@ function(create_clang_format_build_target)
     add_custom_target(format_sources DEPENDS ${FORMATTED_SOURCES})
 endfunction()
 
-# run functions
+# Run functions
 create_cppcheck_build_target()
 create_clang_format_build_target()

@@ -1,7 +1,12 @@
 # Software Development Environment
 
-- A uniform software development environment for building w/ CMake to target all platforms needed
-- An alternative to creating a development Docker image w/ all tools installed for you
+- This repo is a uniform software development environment for building w/ CMake to target all platforms needed
+- ...It's an alternative to creating a development Docker image w/ all tools installed for you
+- The idea is to:
+  - Manually install all tools needed (CMake, etc)
+  - Clone this repo
+  - Delete the .git folder created for this repo
+  - Clone your software project into `src/` folder and develop
 
 ## Index
 
@@ -13,26 +18,29 @@
 
 ## Overview
 
-- To use the software development environment defined by this repo, you need to:
+- To use this repo for development, you need to:
   - Install all tools and set up environment variables
   - Clone this repo (into a folder on your `C:/` drive, or wherever you want)
   - **Delete the .git folder created from cloning this repo**
-    - ...If this repo is ever updated, you need to move out everything under `src/` to a new clone of this repo
+    - ...If this repo is ever updated, you need to copy your work into a new clone of this repo 
   - Clone your software repository into this repo's `src/` folder
-    - Ex: run `git clone https://github.com/Mouse-Unit-07/experiment-software-hello-world .` to clone the Hello World repository into `src/`
-  - Build and develop in this new `software-development-environment` directory w/ MSYS2 and command prompt
+    - Ex: run `git clone https://github.com/Mouse-Unit-07/experiment-software-hello-world .` to clone the Hello World project into `src/`
+  - Build and develop in this new `software-development-environment` directory w/ MSYS2 MINGW 64 and Windows command prompt
 - Refer to `experiment-software-hello-world` and `experiment-software-repeat-hello-world` for examples of source code repositories that are compatible w/ this development environment
 
 ## What To Modify
 
-- Files that must be changed according to the software project you clone into `src/` folder:
-  - `software-development-environment/avr32/CMakeLists.txt`
-    - All of your interface subdirectories under `src/` must be listed out w/ `target_include_directories()`
-    - All libraries must be linked to w/ `target_link_libraries()`
-  - `software-development-environment/tests/CMakeLists.txt`
-    - For CppCheck, all of your interface subdirectories under `src/` must be listed out w/ `add_custom_target()`
-  - `software-development-environment/CMakeLists.txt`
-    - Test subdirectories for each of your interfaces must be listed out w/ individual `add_subdirectory()` calls
+- After you clone a software repo into `src/`, you need to change:
+- `software-development-environment/`
+  - **`CMakeLists.txt`**
+    - Test directories for each of your interfaces must be listed out w/ individual `add_subdirectory()` calls
+  - `avr32/`
+    - **`CMakeLists.txt`**
+      - All of your interface directories under `src/` must be listed out w/ `target_include_directories()`
+      - All of your interfaces (compiled to libraries by CMake) must be linked to w/ `target_link_libraries()`
+  - `tests/`
+    - **`CMakeLists.txt`**
+      - For CppCheck, all of your interface subdirectories under `src/` must be listed out w/ `add_custom_target()`
 
 ## Installations
 
@@ -111,25 +119,25 @@ pacman -S mingw-w64-x86_64-gcc \
 ## Build Instructions
 
 - AVR32 MCU build
-  - navigate to top level project directory w/ MSYS2 MINGW64 terminal
-  - `cmake --preset mcu-build`
-  - `cmake --build --preset mcu-build`
+  - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
+  - `cmake --preset avr32-build`
+  - `cmake --build --preset avr32-build`
 - Windows build
-  - navigate to top level project directory w/ MSYS2 MINGW64 terminal
+  - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
   - `cmake --preset windows-build`
   - `cmake --build --preset windows-build`
   - `ctest --preset windows-build` to run CppUTest unit tests
-- running CppCheck
-  - build Windows build
+- Running CppCheck
+  - Build for Windows
   - navigate to the Windows build directory `build/windows_build` w/ MSYS2 MINGW64 terminal, then run CMake "build" command to run CppCheck
   - `cmake --build . --target cppcheck`
-- running clang-format_sources
-  - build Windows build
-  - navigate to the Windows build directory `build/windows_build` w/ MSYS2 MINGW64 terminal, then run CMake "build" command to run clang-format
+- Running clang-format_sources
+  - Build for Windows
+  - Navigate to the Windows build directory `build/windows_build` w/ MSYS2 MINGW64 terminal, then run CMake "build" command to run clang-format
   - `cmake --build . --target format_sources`
-  - formatted copies of source files will be in build/windows_build/clang-format-output
-- running gcovr
-  - build Windows build and run ctest
-  - open Windows command prompt where gcovr's been installed through pip
-  - navigate to top level project directory
+  - Formatted copies of source files will be in build/windows_build/clang-format-output
+- Running gcovr
+  - Build for Windows and run ctest
+  - Open Windows command prompt where gcovr's been installed through pip
+  - Navigate to top level project directory
   - `gcovr -r . --filter=src/`
