@@ -1,36 +1,40 @@
 #--------------------------------- FILE INFO ----------------------------------#
 # Filename           : CMakeLists.txt                                          #
 #                                                                              #
-# CMakeLists.txt file for AT32UC3L0256 MCU executable build                    #
+# CMakeLists.txt file for AVR32 build                                          #
 #                                                                              #
 #------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 4.0.2)
-project(mcu_build_target LANGUAGES C)
+project(avr32_build LANGUAGES C)
 
-add_executable(mcu_build_target
+add_executable(avr32_build
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
 
-target_include_directories(mcu_build_target PRIVATE
+target_include_directories(avr32_build PRIVATE
 
-    # \/ === ADD SOURCE SUBDIRECTORIES HERE === \/
-    ${CMAKE_SOURCE_DIR}/src/hello_world
+    # === Start: Add each of your source interface directories ===
+    ${CMAKE_SOURCE_DIR}/src/hello_world # Example for Hello World project
+    # === End ===
 
-    "C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/UC3L_DFP/1.0.59/include/AT32UC3L0256"
+    AVR32_STANDARD_LIBRARIES
 )
 
-# \/ === LINK TO ALL LIBRARIES HERE === \/
-target_link_libraries(mcu_build_target PRIVATE
-    hello_world_lib
+target_link_libraries(avr32_build PRIVATE
+
+    # === Start: Link to all of your interfaces (libraries) ===
+    hello_world_lib # Example for Hello World project
+    # === End===
+
 )
 
-set_target_properties(mcu_build_target PROPERTIES SUFFIX ".elf")
+set_target_properties(avr32_build PROPERTIES SUFFIX ".elf")
 
-add_custom_command(TARGET mcu_build_target POST_BUILD
-    COMMAND "$CACHE{AVR32_OBJCOPY}" -O ihex -R .eeprom -R .fuse -R .lock -R .signature $<TARGET_FILE:mcu_build_target> hello_world.hex
-    COMMAND "$CACHE{AVR32_OBJCOPY}" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O ihex $<TARGET_FILE:mcu_build_target> hello_world.eep
-    COMMAND "$CACHE{AVR32_OBJCOPY}" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures $<TARGET_FILE:mcu_build_target> hello_world.srec
-    COMMAND "$CACHE{AVR32_OBJDUMP}" -h -S $<TARGET_FILE:mcu_build_target> > hello_world.lss
-    COMMAND ${AVR32_SIZE} --format=berkeley $<TARGET_FILE:mcu_build_target>
+add_custom_command(TARGET avr32_build POST_BUILD
+    COMMAND "$CACHE{AVR32_OBJCOPY}" -O ihex -R .eeprom -R .fuse -R .lock -R .signature $<TARGET_FILE:avr32_build> avr32_build_output.hex
+    COMMAND "$CACHE{AVR32_OBJCOPY}" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O ihex $<TARGET_FILE:avr32_build> avr32_build_output.eep
+    COMMAND "$CACHE{AVR32_OBJCOPY}" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures $<TARGET_FILE:avr32_build> avr32_build_output.srec
+    COMMAND "$CACHE{AVR32_OBJDUMP}" -h -S $<TARGET_FILE:avr32_build> > avr32_build_output.lss
+    COMMAND ${AVR32_SIZE} --format=berkeley $<TARGET_FILE:avr32_build>
     COMMENT "Generating HEX, EEP, SREC, LSS"
 )
