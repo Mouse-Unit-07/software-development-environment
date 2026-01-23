@@ -19,9 +19,8 @@ endif()
 if(TARGET_WINDOWS)
     enable_testing()
 
-    # === START: Add each of your interface test directories ===
+    # \/=== Add each of your interface test directories
     add_subdirectory(src/hello_world/tests) # Example for Hello World project
-    # === END ===
 
     add_subdirectory(tests)
 endif()
