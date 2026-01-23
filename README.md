@@ -30,17 +30,13 @@
 
 ## What To Modify
 
-- After you clone a software repo into `src/`, you need to change:
+- After you clone a software repo into `src/`, you need to change three `CMakeLists.txt` files- refer to each file for details:
 - `software-development-environment/`
   - **`CMakeLists.txt`**
-    - Test directories for each of your interfaces must be listed out w/ individual `add_subdirectory()` calls
   - `avr32/`
     - **`CMakeLists.txt`**
-      - All of your interface directories under `src/` must be listed out w/ `target_include_directories()`
-      - All of your interfaces (compiled to libraries by CMake) must be linked to w/ `target_link_libraries()`
   - `tests/`
     - **`CMakeLists.txt`**
-      - For CppCheck, all of your interface subdirectories under `src/` must be listed out w/ `add_custom_target()`
 
 ## Installations
 

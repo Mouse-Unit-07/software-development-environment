@@ -19,7 +19,7 @@ endif()
 if(TARGET_WINDOWS)
     enable_testing()
 
-    # \/=== Add each of your interface test directories
+    # \/=== Add each of your library test directories
     add_subdirectory(src/hello_world/tests) # Example for Hello World project
 
     add_subdirectory(tests)
