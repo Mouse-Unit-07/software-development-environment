@@ -13,18 +13,15 @@ add_executable(avr32_build
 
 target_include_directories(avr32_build PRIVATE
 
-    # === Start: Add each of your source interface directories ===
+    # \/=== Add each of your interface directories
     ${CMAKE_SOURCE_DIR}/src/hello_world # Example for Hello World project
-    # === End ===
 
-    AVR32_STANDARD_LIBRARIES
 )
 
 target_link_libraries(avr32_build PRIVATE
 
-    # === Start: Link to all of your interfaces (libraries) ===
+    # \/=== Link to your project's top level software library
     hello_world_lib # Example for Hello World project
-    # === End===
 
 )
 

@@ -20,8 +20,9 @@
         "AVR32_OBJDUMP": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-objdump.exe",
         "AVR32_SIZE":    "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-size.exe",
         "CMAKE_C_COMPILER": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-gcc.exe",
-        "AVR32_STANDARD_LIBRARIES": "C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/UC3L_DFP/1.0.59/include/AT32UC3L0256",
-        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -Wall -ffunction-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DDEBUG",
+        "AVR32_INCLUDE_LIBRARIES": "C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/UC3L_DFP/1.0.59/include/AT32UC3L0256",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -Wall -ffunction-sections -fdata-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DDEBUG -DBOARD=USER_BOARD -fno-strict-aliasing",
+        "CMAKE_ASM_FLAGS_DEBUG": "-O0 -g3 -ffunction-sections -masm-addr-pseudos -mpart=uc3l0256 -DDEBUG -DBOARD=USER_BOARD",
         "CMAKE_EXE_LINKER_FLAGS": "-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable -Wl,--direct-data -mpart=uc3l0256",
         "CMAKE_VERBOSE_MAKEFILE": "ON"
       }
