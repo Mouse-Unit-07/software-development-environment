@@ -30,7 +30,7 @@ function(create_cppcheck_build_target)
             --suppress=missingIncludeSystem
             -I ${CMAKE_SOURCE_DIR}/src
 
-            # \/=== Add each of your interface directories
+            # \/=== Add each of your library directories
             -I ${CMAKE_SOURCE_DIR}/src/hello_world # Example for Hello World project
             
             ${CMAKE_SOURCE_DIR}/src/main.c
