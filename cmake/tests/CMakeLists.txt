@@ -16,10 +16,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(CppUTest)
 
 # Static Analysis: Cppcheck
+set(CPPCHECK_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/cppcheck-output")
+set(CPPCHECK_REPORT     "${CPPCHECK_OUTPUT_DIR}/cppcheck-report.txt")
+
 function(create_cppcheck_build_target)
     message(STATUS "ALL_TEST_SOURCES: ${ALL_TEST_SOURCES}")
 
     add_custom_target(cppcheck
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${CPPCHECK_OUTPUT_DIR}"
         COMMAND cppcheck
             --enable=all
             --inconclusive
@@ -35,8 +39,9 @@ function(create_cppcheck_build_target)
             
             ${CMAKE_SOURCE_DIR}/src/main.c
             ${ALL_TEST_SOURCES}
+            > "${CPPCHECK_REPORT}" 2>&1
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Running Cppcheck on source and test files"
+        COMMENT "Running Cppcheck (output -> ${CPPCHECK_REPORT})"
         VERBATIM
     )
 endfunction()
@@ -48,7 +53,7 @@ function(create_clang_format_build_target)
     set(FORMATTED_SOURCES "")
     foreach(src ${ALL_TEST_SOURCES})
         file(RELATIVE_PATH rel_path "${CMAKE_SOURCE_DIR}" "${src}")
-        set(formatted_file "${CMAKE_BINARY_DIR}/clang-format-output/${rel_path}")
+        set(formatted_file "${CMAKE_SOURCE_DIR}/build/clang-format-output/${rel_path}")
         list(APPEND FORMATTED_SOURCES "${formatted_file}")
 
         get_filename_component(formatted_file_dir "${formatted_file}" DIRECTORY)
@@ -57,7 +62,7 @@ function(create_clang_format_build_target)
             OUTPUT "${formatted_file}"
             COMMAND ${CMAKE_COMMAND} -E make_directory "${formatted_file_dir}"
             COMMAND ${CMAKE_COMMAND} -E copy_if_different "${src}" "${formatted_file}"
-            COMMAND clang-format -i -style=file "${formatted_file}"
+            COMMAND clang-format -i -style=file:"${CMAKE_SOURCE_DIR}/cmake/utilities/.clang-format" "${formatted_file}"
             DEPENDS "${src}"
             COMMENT "Formatting ${rel_path} -> ${formatted_file}"
         )

@@ -33,10 +33,11 @@
 - After you clone a software repo into `src/`, you need to change three `CMakeLists.txt` files- refer to each file for details:
 - `software-development-environment/`
   - **`CMakeLists.txt`**
-  - `avr32/`
-    - **`CMakeLists.txt`**
-  - `tests/`
-    - **`CMakeLists.txt`**
+  - `cmake/`
+    - `avr32/`
+      - **`CMakeLists.txt`**
+    - `tests/`
+      - **`CMakeLists.txt`**
 
 ## Installations
 
@@ -60,8 +61,6 @@
   - Microchip Studio IDE
     - https://www.microchip.com/en-us/tools-resources/develop/microchip-studio
     - installing the IDE will install the AVR32 toolchain for CMake to use
-  - Git Bash
-    - https://git-scm.com/downloads/win
   - Python and pip
     - https://www.python.org/downloads/
     - Make sure to check "Add Python to PATH"
@@ -114,26 +113,32 @@ pacman -S mingw-w64-x86_64-gcc \
 
 ## Build Instructions
 
-- AVR32 MCU build
-  - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
-  - `cmake --preset avr32-build`
-  - `cmake --build --preset avr32-build`
-- Windows build
-  - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
-  - `cmake --preset windows-build`
-  - `cmake --build --preset windows-build`
-  - `ctest --preset windows-build` to run CppUTest unit tests
-- Running CppCheck
-  - Build for Windows
-  - navigate to the Windows build directory `build/windows_build` w/ MSYS2 MINGW64 terminal, then run CMake "build" command to run CppCheck
-  - `cmake --build . --target cppcheck`
-- Running clang-format_sources
-  - Build for Windows
-  - Navigate to the Windows build directory `build/windows_build` w/ MSYS2 MINGW64 terminal, then run CMake "build" command to run clang-format
-  - `cmake --build . --target format_sources`
-  - Formatted copies of source files will be in build/windows_build/clang-format-output
-- Running gcovr
-  - Build for Windows and run ctest
-  - Open Windows command prompt where gcovr's been installed through pip
-  - Navigate to top level project directory
-  - `gcovr -r . --filter=src/`
+- **Python script**
+  - `rebuild_all.py` is a shortcut to everything under "manual build" below, minus gcovr
+  - Navigate to the top level project directory w/ MSYS2 MINGW64 terminal, and enter:
+    - `python rebuild_all.py --clean` for a clean build (deleting build folder)
+    - `python rebuild_all.py` for a regular rebuild
+- **Manual build**:
+  - AVR32 MCU build
+    - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
+    - `cmake --preset avr32-build`
+    - `cmake --build --preset avr32-build`
+  - Windows build
+    - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
+    - `cmake --preset windows-build`
+    - `cmake --build --preset windows-build`
+    - `ctest --preset windows-build` to run CppUTest unit tests
+  - Running CppCheck
+    - Build for Windows
+    - Run CMake "build" command to run CppCheck
+    - `cmake --build build/windows_build --target cppcheck`
+  - Running clang-format_sources
+    - Build for Windows
+    - Run CMake "build" command to run clang-format
+    - `cmake --build build/windows_build --target format_sources`
+    - Formatted copies of source files will be in build/windows_build/clang-format-output
+  - Running gcovr
+    - Build for Windows and run ctest
+    - Open Windows command prompt where gcovr's been installed through pip
+    - Navigate to top level project directory
+    - `gcovr -r . --filter=src/`
