@@ -7,7 +7,49 @@
   },
   "configurePresets": [
     {
+      "name": "common-avr32-paths",
+      "hidden": true,
+      "cacheVariables": {
+        "AVR32_INCLUDE_LIBRARIES": "C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/UC3L_DFP/1.0.59/include/AT32UC3L0256"
+      }
+    },
+    {
+      "name": "base-debug-flags",
+      "hidden": true,
+      "cacheVariables": {
+        "COMMON_C_FLAGS_DEBUG": "-O0 -g3 -Wall -DDEBUG",
+        "COMMON_ASM_FLAGS_DEBUG": "-O0 -g3 -DDEBUG" 
+      }
+    },
+    {
+      "name": "avr32-flags",
+      "hidden": true,
+      "inherits": ["base-debug-flags"],
+      "cacheVariables": {
+        "TARGET_AVR32": "ON",
+
+        "PLATFORM_C_FLAGS_DEBUG": "-ffunction-sections -fdata-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DBOARD=USER_BOARD -fno-strict-aliasing",
+        "PLATFORM_ASM_FLAGS_DEBUG": "-ffunction-sections -masm-addr-pseudos -mpart=uc3l0256 -DBOARD=USER_BOARD",
+        "PLATFORM_EXE_LINKER_FLAGS":"-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable --direct-data -mpart=uc3l0256"
+      }
+    },
+    {
+      "name": "windows-flags",
+      "hidden": true,
+      "inherits": ["base-debug-flags"],
+      "cacheVariables": {
+        "TARGET_WINDOWS": "ON",
+
+        "PLATFORM_C_FLAGS":
+          "--coverage -ffile-prefix-map=${sourceDir}/=",
+
+        "PLATFORM_CXX_FLAGS":
+          "--coverage -ffile-prefix-map=${sourceDir}/="
+      }
+    },
+    {
       "name": "avr32-build",
+      "inherits": ["common-avr32-paths", "avr32-flags"],
       "displayName": "AVR32 MCU Debug Build",
       "description": "Debug build for AVR32 AT32UC3L0256 MCU",
       "generator": "Ninja",
@@ -20,15 +62,12 @@
         "AVR32_OBJDUMP": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-objdump.exe",
         "AVR32_SIZE":    "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-size.exe",
         "CMAKE_C_COMPILER": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-gcc.exe",
-        "AVR32_INCLUDE_LIBRARIES": "C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/UC3L_DFP/1.0.59/include/AT32UC3L0256",
-        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -Wall -ffunction-sections -fdata-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DDEBUG -DBOARD=USER_BOARD -fno-strict-aliasing",
-        "CMAKE_ASM_FLAGS_DEBUG": "-O0 -g3 -ffunction-sections -masm-addr-pseudos -mpart=uc3l0256 -DDEBUG -DBOARD=USER_BOARD",
-        "CMAKE_EXE_LINKER_FLAGS": "-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable -Wl,--direct-data -mpart=uc3l0256",
         "CMAKE_VERBOSE_MAKEFILE": "ON"
       }
     },
     {
       "name": "windows-build",
+      "inherits": ["common-avr32-paths", "windows-flags"],
       "displayName": "Windows Test Debug Build",
       "description": "Debug unit testing build for Windows",
       "generator": "Ninja",
@@ -37,9 +76,7 @@
         "TARGET_WINDOWS": "ON",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
-        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
-        "CMAKE_C_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/=",
-        "CMAKE_CXX_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/="
+        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe"
       }
     }
   ],
