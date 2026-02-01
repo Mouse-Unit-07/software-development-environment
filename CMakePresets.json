@@ -40,11 +40,8 @@
       "cacheVariables": {
         "TARGET_WINDOWS": "ON",
 
-        "PLATFORM_C_FLAGS":
-          "--coverage -ffile-prefix-map=${sourceDir}/=",
-
-        "PLATFORM_CXX_FLAGS":
-          "--coverage -ffile-prefix-map=${sourceDir}/="
+        "PLATFORM_C_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/= -DWINDOWS_BUILD",
+        "PLATFORM_CXX_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/= -DWINDOWS_BUILD"
       }
     },
     {
