@@ -20,6 +20,7 @@ def run(cmd):
         return False
     return True
 
+
 def run_build(target_name, commands):
     """Run commands for a build target, skipping remaining if one fails."""
     print(f"\n=== Starting {target_name} build ===")
@@ -29,46 +30,62 @@ def run_build(target_name, commands):
             return
     print(f"=== {target_name} build completed successfully ===\n")
 
+
 def remove_build_folder(path: Path):
     """Delete a folder safely, handling read-only files."""
     if not path.exists():
         print("Build folder does not exist, nothing to delete.")
         return
+
     print(f"Deleting build folder: {path.resolve()}")
-    
+
     def onerror(func, path, excinfo):
         os.chmod(path, stat.S_IWRITE)
         func(path)
-    
+
     shutil.rmtree(path, onerror=onerror)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Run CMake build commands")
-    parser.add_argument("--clean", action="store_true", help="Delete the build folder before building")
+    parser.add_argument("--clean", action="store_true",
+                        help="Delete the build folder and reconfigure")
     args = parser.parse_args()
 
     build_dir = Path("build")
     if args.clean:
         remove_build_folder(build_dir)
 
-    # Commands per build target
     builds = {
-        "AVR32": [
-            ["cmake", "--preset", "avr32-build"],
-            ["cmake", "--build", "--preset", "avr32-build"],
-        ],
-        "Windows": [
-            ["cmake", "--preset", "windows-build"],
-            ["cmake", "--build", "--preset", "windows-build"],
-            ["cmake", "--build", "build/windows_build", "--target", "format_sources"],
-            ["cmake", "--build", "build/windows_build", "--target", "cppcheck"],
-            ["ctest", "--preset", "windows-build"],
-        ]
+        "AVR32": {
+            "configure": [
+                ["cmake", "--preset", "avr32-build"],
+            ],
+            "actions": [
+                ["cmake", "--build", "--preset", "avr32-build"],
+            ],
+        },
+        "Windows": {
+            "configure": [
+                ["cmake", "--preset", "windows-build"],
+            ],
+            "actions": [
+                ["cmake", "--build", "--preset", "windows-build"],
+                ["cmake", "--build", "--preset", "windows-build", "--target", "format_sources"],
+                ["cmake", "--build", "--preset", "windows-build", "--target", "cppcheck"],
+                ["ctest", "--preset", "windows-build"],
+            ],
+        },
     }
 
-    # Run all builds
-    for target, commands in builds.items():
+    for target, steps in builds.items():
+        commands = []
+        if args.clean:
+            commands.extend(steps["configure"])
+        commands.extend(steps["actions"])
+
         run_build(target, commands)
+
 
 if __name__ == "__main__":
     start = time.perf_counter()
