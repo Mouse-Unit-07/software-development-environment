@@ -10,7 +10,7 @@ project(windows_build LANGUAGES C CXX)
 include(FetchContent)
 FetchContent_Declare(
     CppUTest
-    GIT_REPOSITORY https://github.com/cpputest/cpputest.git
+    GIT_REPOSITORY git@github.com:cpputest/cpputest.git
     GIT_TAG master
 )
 FetchContent_MakeAvailable(CppUTest)
