@@ -5,7 +5,7 @@
 #                                                                              #
 #------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 4.0.2)
-project(avr32_build LANGUAGES C)
+project(avr32_build LANGUAGES C CXX)
 
 add_executable(avr32_build
     ${CMAKE_SOURCE_DIR}/src/main.c
