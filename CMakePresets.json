@@ -59,6 +59,7 @@
         "AVR32_OBJDUMP": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-objdump.exe",
         "AVR32_SIZE":    "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-size.exe",
         "CMAKE_C_COMPILER": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/Program Files (x86)/Atmel/Studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/avr32-g++.exe",
         "CMAKE_VERBOSE_MAKEFILE": "ON"
       }
     },
