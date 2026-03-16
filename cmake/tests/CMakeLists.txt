@@ -10,6 +10,7 @@ project(windows_build LANGUAGES C CXX)
 include(FetchContent)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(CPPUTEST_MEM_LEAK_DETECTION_DISABLED ON CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
     CppUTest
