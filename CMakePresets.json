@@ -70,6 +70,9 @@
       "description": "Debug unit testing build for Windows",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/windows_build",
+      "environment": {
+        "PATH": "C:/msys64/mingw64/bin;$penv{PATH}"
+      },
       "cacheVariables": {
         "TARGET_WINDOWS": "ON",
         "CMAKE_BUILD_TYPE": "Debug",
@@ -97,6 +100,9 @@
       "name": "windows-build",
       "configurePreset": "windows-build",
       "description": "Run unit tests on Windows with MSYS2 GCC",
+      "environment": {
+        "PATH": "C:/msys64/mingw64/bin;$penv{PATH}"
+      },
       "output": {
         "outputOnFailure": true
       }
