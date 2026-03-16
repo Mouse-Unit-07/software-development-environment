@@ -8,6 +8,9 @@ cmake_minimum_required(VERSION 4.0.2)
 project(windows_build LANGUAGES C CXX)
 
 include(FetchContent)
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     CppUTest
     GIT_REPOSITORY git@github.com:cpputest/cpputest.git
