@@ -51,6 +51,8 @@
       - gcov 15.0.1
       - CMake 4.0.2
       - Ninja 1.12.1
+      - clang-format 20.1.5
+      - cppcheck 2.17.1
       - git 2.49.0 (required for FetchContent)
     - Python 3.9
       - pip 25.1.1 -> gcovr 8.3 (Python wrapper around gcov)
@@ -83,7 +85,9 @@ pacman -S mingw-w64-x86_64-gcc \
             mingw-w64-x86_64-gcc-libs \
             mingw-w64-x86_64-gcov \
             mingw-w64-x86_64-cmake \
-            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-ninja \
+            mingw-w64-x86_64-clang-tools-extra \
+            mingw-w64-x86_64-cppcheck
 ```
 
 - **Check installations**
@@ -93,6 +97,8 @@ pacman -S mingw-w64-x86_64-gcc \
     - `gcov --version` -> should return 15.0.1+
     - `cmake --version` -> should return 4.0.2+
     - `ninja --version` -> should return 1.12.1+
+    - `clang-format --version` -> should return 20.1.5+
+    - `cppcheck --version` -> should return 2.17.1+
     - `git --version` -> should return 2.49.0+
   - Run and verify below on Windows command prompt to see specified version number or higher:
     - `python --version` -> should return 3.9.10+
