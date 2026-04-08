@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 import stat
 import time
+import sys
 
 # Quick and dirty Python script to run all CMake build commands.
 # Not intended to be cemented into our development process- this script is just
@@ -13,78 +14,103 @@ import time
 # ...For robust automation, you'd start building pipelines...
 
 def run(cmd):
-    """Run a command and return True if it succeeded, False otherwise."""
+    """Run a command and exit on failure."""
     print(f"Running: {' '.join(cmd)}")
-    if subprocess.run(cmd).returncode != 0:
+    result = subprocess.run(cmd)
+    if result.returncode != 0:
         print(f"Command failed: {' '.join(cmd)}")
-        return False
-    return True
-
-
-def run_build(target_name, commands):
-    """Run commands for a build target, skipping remaining if one fails."""
-    print(f"\n=== Starting {target_name} build ===")
-    for cmd in commands:
-        if not run(cmd):
-            print(f"Skipping remaining {target_name} commands due to failure.\n")
-            return
-    print(f"=== {target_name} build completed successfully ===\n")
+        sys.exit(result.returncode)
 
 
 def remove_build_folder(path: Path):
-    """Delete a folder safely, handling read-only files."""
+    """Delete build folder safely."""
     if not path.exists():
-        print("Build folder does not exist, nothing to delete.")
         return
 
     print(f"Deleting build folder: {path.resolve()}")
 
-    def onerror(func, path, excinfo):
-        os.chmod(path, stat.S_IWRITE)
-        func(path)
+    def onerror(func, p, _):
+        os.chmod(p, stat.S_IWRITE)
+        func(p)
 
     shutil.rmtree(path, onerror=onerror)
 
 
+def ensure_build_folder(path: Path):
+    """Ensure build folder exists."""
+    path.mkdir(parents=True, exist_ok=True)
+
+
+def configure(preset):
+    run(["cmake", "--preset", preset])
+
+
+def build(preset):
+    run(["cmake", "--build", "--preset", preset])
+
+
+def run_target(preset, target):
+    run(["cmake", "--build", "--preset", preset, "--target", target])
+
+
+def run_tests():
+    run(["ctest", "--preset", "windows-build"])
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Run CMake build commands")
-    parser.add_argument("--clean", action="store_true",
-                        help="Delete the build folder and reconfigure")
+    parser = argparse.ArgumentParser(
+        description="CMake build helper",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+
+    parser.add_argument("--clean", action="store_true", help="Delete build folder first")
+    parser.add_argument("--all", action="store_true", help="Run AVR + Windows builds")
+    parser.add_argument("--windows", action="store_true", help="Run Windows build + tests")
+    parser.add_argument("--avr", action="store_true", help="Run AVR build")
+    parser.add_argument("--format", action="store_true", help="Run clang-format target")
+    parser.add_argument("--cppcheck", action="store_true", help="Run cppcheck target")
+
     args = parser.parse_args()
 
+    # Show help if no args
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+
     build_dir = Path("build")
+
     if args.clean:
         remove_build_folder(build_dir)
 
-    builds = {
-        "AVR32": {
-            "configure": [
-                ["cmake", "--preset", "avr32-build"],
-            ],
-            "actions": [
-                ["cmake", "--build", "--preset", "avr32-build"],
-            ],
-        },
-        "Windows": {
-            "configure": [
-                ["cmake", "--preset", "windows-build"],
-            ],
-            "actions": [
-                ["cmake", "--build", "--preset", "windows-build"],
-                ["cmake", "--build", "--preset", "windows-build", "--target", "format_sources"],
-                ["cmake", "--build", "--preset", "windows-build", "--target", "cppcheck"],
-                ["ctest", "--preset", "windows-build"],
-            ],
-        },
-    }
+    ensure_build_folder(build_dir)
 
-    for target, steps in builds.items():
-        commands = []
-        if args.clean:
-            commands.extend(steps["configure"])
-        commands.extend(steps["actions"])
+    # Determine what to run
+    run_avr = args.avr or args.all
+    run_windows = args.windows or args.all
 
-        run_build(target, commands)
+    # ---------------- AVR ----------------
+    if run_avr:
+        print("\n=== AVR BUILD ===")
+        configure("avr32-build")
+        build("avr32-build")
+
+    # ---------------- WINDOWS ----------------
+    if run_windows:
+        print("\n=== WINDOWS BUILD ===")
+        configure("windows-build")
+        build("windows-build")
+        run_tests()
+
+    # ---------------- OPTIONAL TARGETS ----------------
+    if args.format:
+        print("\n=== CLANG-FORMAT ===")
+        configure("windows-build")
+        run_target("windows-build", "format_sources")
+
+    if args.cppcheck:
+        print("\n=== CPPCHECK ===")
+        configure("windows-build")
+        run_target("windows-build", "cppcheck")
 
 
 if __name__ == "__main__":
