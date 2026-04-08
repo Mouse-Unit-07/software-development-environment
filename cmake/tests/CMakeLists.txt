@@ -19,6 +19,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CppUTest)
 
+# ------------------------------------------------------------------------------
 # Static Analysis: Cppcheck
 set(CPPCHECK_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/cppcheck-output")
 set(CPPCHECK_REPORT     "${CPPCHECK_OUTPUT_DIR}/cppcheck-report.txt")
@@ -50,6 +51,7 @@ function(create_cppcheck_build_target)
     )
 endfunction()
 
+# ------------------------------------------------------------------------------
 # Formatting: clang-format
 function(create_clang_format_build_target)
     message(STATUS "ALL_TEST_SOURCES: ${ALL_TEST_SOURCES}")
@@ -75,6 +77,7 @@ function(create_clang_format_build_target)
     add_custom_target(format_sources DEPENDS ${FORMATTED_SOURCES})
 endfunction()
 
+# ------------------------------------------------------------------------------
 # Run functions
 create_cppcheck_build_target()
 create_clang_format_build_target()

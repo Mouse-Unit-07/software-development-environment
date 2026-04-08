@@ -1,15 +1,46 @@
-# .clang-format (minimal and strict)
 BasedOnStyle: LLVM
+
 IndentWidth: 4
 UseTab: Never
-ColumnLimit: 80
+ColumnLimit: 100
+
 PointerAlignment: Right
-SortIncludes: false
+ReferenceAlignment: Left
+
+SortIncludes: true
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '^<.*>'
+    Priority: 1
+  - Regex: '.*'
+    Priority: 2
 
 AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
+
+AlwaysBreakAfterReturnType: None
+
+BreakBeforeBinaryOperators: NonAssignment
 
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterEnum: true
   AfterFunction: true
+  AfterClass: false
+  AfterStruct: false
+  AfterNamespace: true
+  AfterExternBlock: true
   AfterControlStatement: false
+  BeforeElse: false
+
+NamespaceIndentation: None
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+IndentExternBlock: NoIndent
+
+ReflowComments: false
+SpacesBeforeTrailingComments: 1
+AlignTrailingComments: false
