@@ -119,32 +119,55 @@ pacman -S mingw-w64-x86_64-gcc \
 
 ## Build Instructions
 
-- **Python script**
-  - `rebuild_all.py` is a shortcut to everything under "manual build" below, minus gcovr
-  - Navigate to the top level project directory w/ MSYS2 MINGW64 terminal, and enter:
-    - `python rebuild_all.py --clean` for a clean build (deleting build folder)
-    - `python rebuild_all.py` for a regular rebuild
+- **Python Script**
+  - `tool_invoker.py` is a flexible helper script to invoke builds and tooling without manually typing CMake commands
+  - Navigate to the top level project directory using the MSYS2 MINGW64 terminal, then run:
+    - `python tool_invoker.py --help`  
+      - Displays all available options
+    - `python tool_invoker.py --clean`  
+      - Deletes the `build/` folder before running any other specified actions
+    - `python tool_invoker.py --all`  
+      - Runs both AVR32 and Windows builds
+    - `python tool_invoker.py --windows`  
+      - Runs Windows build and CppUTest tests
+    - `python tool_invoker.py --avr`  
+      - Runs AVR32 build only
+    - `python tool_invoker.py --format`  
+      - Runs `clang-format` via the `format_sources` CMake target  
+      - Formatted copies of source files will be generated in:  
+        `build/clang-format-output/`
+    - `python tool_invoker.py --cppcheck`  
+      - Runs `cppcheck` via the CMake target
+  - **Options can be combined**:
+    - Example: clean + full build + formatting
+      - `python tool_invoker.py --clean --all --format`
+    - Example: Windows build + cppcheck
+      - `python tool_invoker.py --windows --cppcheck`
+
+  - If no options are provided, the script will display the help menu
 - **Manual build**:
   - AVR32 MCU build
-    - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
+    - Navigate to top level project directory using MSYS2 MINGW64 terminal
     - `cmake --preset avr32-build`
     - `cmake --build --preset avr32-build`
   - Windows build
-    - Navigate to top level project directory w/ MSYS2 MINGW64 terminal
+    - Navigate to top level project directory using MSYS2 MINGW64 terminal
     - `cmake --preset windows-build`
     - `cmake --build --preset windows-build`
     - `ctest --preset windows-build` to run CppUTest unit tests
   - Running CppCheck
     - Build for Windows
-    - Run CMake "build" command to run CppCheck
-    - `cmake --build build/windows_build --target cppcheck`
-  - Running clang-format_sources
+    - Run:
+      - `cmake --build build/windows_build --target cppcheck`
+  - Running clang-format
     - Build for Windows
-    - Run CMake "build" command to run clang-format
-    - `cmake --build build/windows_build --target format_sources`
-    - Formatted copies of source files will be in build/windows_build/clang-format-output
+    - Run:
+      - `cmake --build build/windows_build --target format_sources`
+    - Formatted files will be output to:
+      - `build/clang-format-output/`
   - Running gcovr
-    - Build for Windows and run ctest
-    - Open Windows command prompt where gcovr's been installed through pip
+    - Build for Windows and run tests
+    - Open Windows command prompt (where `gcovr` is installed via pip)
     - Navigate to top level project directory
-    - `gcovr -r . --filter=src/`
+    - Run:
+      - `gcovr -r . --filter=src/`
