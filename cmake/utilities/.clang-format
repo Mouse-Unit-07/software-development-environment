@@ -41,6 +41,9 @@ AccessModifierOffset: -4
 
 IndentExternBlock: NoIndent
 
+IndentCaseLabels: true
+IndentCaseBlocks: true
+
 ReflowComments: false
 SpacesBeforeTrailingComments: 1
 AlignTrailingComments: false
