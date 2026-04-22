@@ -58,33 +58,38 @@ function(create_clang_format_build_target)
 
     set(CL_FORMAT_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/clang-format-output")
 
-    # Step 1: Always clean output directory
-    add_custom_target(clang_format_clean_output
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "${CL_FORMAT_OUTPUT_DIR}"
+    list(LENGTH ALL_TEST_SOURCES NUM_FORMAT_FILES)
+    message(STATUS "clang-format will process ${NUM_FORMAT_FILES} files")
+
+    set(FORMAT_COMMANDS
+        COMMAND ${CMAKE_COMMAND} -E echo "Formatting ${NUM_FORMAT_FILES} files..."
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CL_FORMAT_OUTPUT_DIR}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CL_FORMAT_OUTPUT_DIR}"
-        COMMENT "Cleaning clang-format output directory"
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_SOURCE_DIR}/cmake/utilities/.clang-format"
+            "${CL_FORMAT_OUTPUT_DIR}/.clang-format"
     )
 
-    set(FORMATTED_SOURCES "")
     foreach(src ${ALL_TEST_SOURCES})
         file(RELATIVE_PATH rel_path "${CMAKE_SOURCE_DIR}" "${src}")
-        set(formatted_file "${CL_FORMAT_OUTPUT_DIR}/${rel_path}")
-        list(APPEND FORMATTED_SOURCES "${formatted_file}")
+        set(dst "${CL_FORMAT_OUTPUT_DIR}/${rel_path}")
 
-        get_filename_component(formatted_file_dir "${formatted_file}" DIRECTORY)
+        get_filename_component(dst_dir "${dst}" DIRECTORY)
 
-        add_custom_command(
-            OUTPUT "${formatted_file}"
-            COMMAND ${CMAKE_COMMAND} -E make_directory "${formatted_file_dir}"
-            COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${formatted_file}"
-            COMMAND clang-format -i -style=file:"${CMAKE_SOURCE_DIR}/cmake/utilities/.clang-format" "${formatted_file}"
-            DEPENDS "${src}" clang_format_clean_output
-            COMMENT "Formatting ${rel_path} -> ${formatted_file}"
+        list(APPEND FORMAT_COMMANDS
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${dst_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
+            COMMAND clang-format -i
+                -style=file
+                -assume-filename="${CMAKE_SOURCE_DIR}/cmake/utilities/dummy.cpp"
+                "${dst}"
         )
     endforeach()
 
     add_custom_target(format_sources
-        DEPENDS clang_format_clean_output ${FORMATTED_SOURCES}
+        ${FORMAT_COMMANDS}
+        COMMENT "Generating formatted copies"
+        VERBATIM
     )
 endfunction()
 
