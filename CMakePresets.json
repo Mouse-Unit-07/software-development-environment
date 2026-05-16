@@ -14,39 +14,8 @@
       }
     },
     {
-      "name": "base-debug-flags",
-      "hidden": true,
-      "cacheVariables": {
-        "COMMON_C_FLAGS_DEBUG": "-O0 -g3 -Wall -DDEBUG",
-        "COMMON_ASM_FLAGS_DEBUG": "-O0 -g3 -DDEBUG" 
-      }
-    },
-    {
-      "name": "avr32-flags",
-      "hidden": true,
-      "inherits": ["base-debug-flags"],
-      "cacheVariables": {
-        "TARGET_AVR32": "ON",
-
-        "PLATFORM_C_FLAGS_DEBUG": "-ffunction-sections -fdata-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DBOARD=USER_BOARD -fno-strict-aliasing",
-        "PLATFORM_ASM_FLAGS_DEBUG": "-ffunction-sections -masm-addr-pseudos -mpart=uc3l0256 -DBOARD=USER_BOARD",
-        "PLATFORM_EXE_LINKER_FLAGS":"-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable --direct-data -mpart=uc3l0256"
-      }
-    },
-    {
-      "name": "windows-flags",
-      "hidden": true,
-      "inherits": ["base-debug-flags"],
-      "cacheVariables": {
-        "TARGET_WINDOWS": "ON",
-
-        "PLATFORM_C_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/= -DWINDOWS_BUILD",
-        "PLATFORM_CXX_FLAGS": "--coverage -ffile-prefix-map=${sourceDir}/= -DWINDOWS_BUILD"
-      }
-    },
-    {
       "name": "avr32-build",
-      "inherits": ["common-avr32-paths", "avr32-flags"],
+      "inherits": ["common-avr32-paths"],
       "displayName": "AVR32 MCU Debug Build",
       "description": "Debug build for AVR32 AT32UC3L0256 MCU",
       "generator": "Ninja",
@@ -65,7 +34,7 @@
     },
     {
       "name": "windows-build",
-      "inherits": ["common-avr32-paths", "windows-flags"],
+      "inherits": ["common-avr32-paths"],
       "displayName": "Windows Test Debug Build",
       "description": "Debug unit testing build for Windows",
       "generator": "Ninja",
