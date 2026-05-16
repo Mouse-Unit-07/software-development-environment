@@ -7,22 +7,33 @@
 cmake_minimum_required(VERSION 4.0.2)
 project(avr32_build LANGUAGES C CXX)
 
+# ------------------------------------------------------------------------------
+# AVR32 build flags
+
+set(CMAKE_C_FLAGS_DEBUG
+    "-O0 -g3 -Wall -DDEBUG -ffunction-sections -fdata-sections -masm-addr-pseudos -std=gnu99 -mpart=uc3l0256 -DBOARD=USER_BOARD -fno-strict-aliasing"
+    CACHE STRING "" FORCE
+)
+
+set(CMAKE_ASM_FLAGS_DEBUG
+    "-O0 -g3 -DDEBUG -ffunction-sections -masm-addr-pseudos -mpart=uc3l0256 -DBOARD=USER_BOARD"
+    CACHE STRING "" FORCE
+)
+
+set(CMAKE_EXE_LINKER_FLAGS
+    "-Wl,--gc-sections -Wl,--start-group -lm -Wl,--end-group --rodata-writable --direct-data -mpart=uc3l0256"
+    CACHE STRING "" FORCE
+)
+# ------------------------------------------------------------------------------
+
 add_executable(avr32_build
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
 
-target_include_directories(avr32_build PRIVATE
-
-    # \/=== Add each of your library directories
-    ${CMAKE_SOURCE_DIR}/src/hello_world # Example for Hello World project
-
-)
-
 target_link_libraries(avr32_build PRIVATE
 
-    # \/=== Link to all libraries defined by your software project needed in the executable
+    # \/=== Link to the aggregate library for your software project
     hello_world_lib # Example for Hello World project
-
 )
 
 set_target_properties(avr32_build PROPERTIES SUFFIX ".elf")

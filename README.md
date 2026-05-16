@@ -30,14 +30,10 @@
 
 ## What To Modify
 
-- After you clone a software repo into `src/`, you need to change three `CMakeLists.txt` files- refer to each file for details:
-- `software-development-environment/`
-  - **`CMakeLists.txt`**
-  - `cmake/`
-    - `avr32/`
-      - **`CMakeLists.txt`**
-    - `tests/`
-      - **`CMakeLists.txt`**
+- After you clone a software repo into `src/`, all you need to change is:
+  - `platforms/avr32/CMakeLists.txt` to link your project library to AVR32 executable
+- And optionally `platforms/windows/utilities/utilities.cmake` for CppCheck
+- Refer to each file for details
 
 ## Installations
 
