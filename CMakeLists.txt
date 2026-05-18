@@ -30,3 +30,8 @@ elseif(TARGET_WINDOWS AND NOT SUPPORTS_WINDOWS)
 endif()
 
 add_subdirectory(src)
+
+if(TARGET_WINDOWS AND SUPPORTS_WINDOWS)
+    create_cppcheck_build_target()
+    create_clang_format_build_target()
+endif()
