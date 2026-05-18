@@ -46,9 +46,9 @@ endfunction()
 
 # ------------------------------------------------------------------------------
 # Formatting: clang-format
-get_property(ALL_TEST_SOURCES GLOBAL PROPERTY ALL_TEST_SOURCES)
-
 function(create_clang_format_build_target)
+    get_property(ALL_TEST_SOURCES GLOBAL PROPERTY ALL_TEST_SOURCES)
+
     message(STATUS "ALL_TEST_SOURCES: ${ALL_TEST_SOURCES}")
 
     set(CL_FORMAT_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/clang-format-output")
@@ -61,7 +61,7 @@ function(create_clang_format_build_target)
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${CL_FORMAT_OUTPUT_DIR}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CL_FORMAT_OUTPUT_DIR}"
         COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_SOURCE_DIR}/utilities/.clang-format"
+            "${CMAKE_SOURCE_DIR}/platforms/windows/utilities/.clang-format"
             "${CL_FORMAT_OUTPUT_DIR}/.clang-format"
     )
 
@@ -76,7 +76,7 @@ function(create_clang_format_build_target)
             COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
             COMMAND clang-format -i
                 -style=file
-                -assume-filename="${CMAKE_CURRENT_SOURCE_DIR}/utilities/dummy.cpp"
+                -assume-filename="${CMAKE_SOURCE_DIR}/platforms/windows/utilities/dummy.cpp"
                 "${dst}"
         )
     endforeach()
@@ -87,8 +87,3 @@ function(create_clang_format_build_target)
         VERBATIM
     )
 endfunction()
-
-# ------------------------------------------------------------------------------
-# Run functions
-create_cppcheck_build_target()
-create_clang_format_build_target()
